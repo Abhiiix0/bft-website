@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+
+# Environment files
+.env
+.env.*.local
+
+# Build output
+dist/
+build/
+.cache/
+
+# Dependency directories
+medusa-bft/node_modules/
+medusa-bft-storefront/node_modules/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+
