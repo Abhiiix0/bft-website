@@ -11,8 +11,8 @@ build/
 .cache/
 
 # Dependency directories
-medusa-bft/node_modules/
-medusa-bft-storefront/node_modules/
+backend-bft/node_modules/
+backend-bft-storefront/node_modules/
 
 # OS-specific files
 .DS_Store
@@ -22,4 +22,3 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
-
