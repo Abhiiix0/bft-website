@@ -3,6 +3,7 @@
 import { RadioGroup } from "@headlessui/react"
 import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
+import Razorpay from "razorpay";
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -32,6 +33,18 @@ console.log("availablePaymentMethods")
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
     activeSession?.provider_id ?? ""
   )
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -83,7 +96,15 @@ console.log("availablePaymentMethods")
 
   const handleSubmit = async () => {
     setIsLoading(true)
+    console.log(selectedPaymentMethod)
+    const isRazorpay = selectedPaymentMethod === "pp_razorpay_my-payment";
+    console.log(isRazorpay)
     try {
+      if (isRazorpay) {
+        // Handle Razorpay payment
+        await handleRazorpayPayment();
+        return;
+      }
       const shouldInputCard =
         isStripeFunc(selectedPaymentMethod) && !activeSession
 
@@ -107,7 +128,37 @@ console.log("availablePaymentMethods")
       setIsLoading(false)
     }
   }
-
+  const handleRazorpayPayment = async () => {
+    console.log(cart)
+    const razorpayOptions = {
+      key: 'rzp_test_nnnx2wjDbtZGBq', // Use `key_id` here
+      amount:  parseFloat(cart.total) * 100, // Amount in paise
+      currency: "INR",
+      name: "Your Store Name",
+      description: "Payment for your order",
+      image: "https://your-store-logo-url.com/logo.png",
+      handler: (response: any) => {
+        console.log("Payment Successful", response);
+        // Handle success logic
+      },
+      prefill: {
+        name: cart.customer?.name || "",
+        email: cart.customer?.email || "",
+        contact: cart.customer?.phone || "",
+      },
+      theme: {
+        color: "#F37254",
+      },
+    };
+  console.log("hi")
+    const rzp = new window.Razorpay(razorpayOptions);
+  
+    // rzp?.on("payment.failed", (response: any) => {
+    //   console.error("Payment Failed", response.error);
+    // });
+    rzp?.open();
+  };
+  
   useEffect(() => {
     setError(null)
   }, [isOpen])

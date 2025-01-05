@@ -448,7 +448,7 @@ const initiateRazorpayOrder = async (cart: any) => {
   console.log("hii")
   try {
     // Make a request to your backend to create the Razorpay order
-    const response = await axios.post('/api/create-razorpay-order', {
+    const response = await axios.post('/store/initiate', {
       amount: cart.total,  // Amount to be paid (you can adjust this based on your cart structure)
       currency: 'INR',     // Specify the currency (INR is commonly used in Razorpay)
       cartId: cart.id,     // Pass the cart ID or any necessary data
