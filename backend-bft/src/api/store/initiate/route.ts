@@ -26,15 +26,16 @@ export async function POST(
       currency,
       receipt,
     };
-
+      console.log("options",options)
     const order = await razorpay.orders.create(options);
-
+console.log("order",order)
     res.status(200).json({
       success: true,
       message: "Order created successfully.",
       order,
     });
   } catch (error) {
+      console.log("error",error)
     res.status(500).json({
       success: false,
       message: "Failed to create order.",
